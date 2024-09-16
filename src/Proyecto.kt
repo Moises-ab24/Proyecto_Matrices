@@ -10,22 +10,26 @@ class Examen(val nombres: Array<String>) {
     val respuestas: Array<CharArray> = Array(4) { CharArray(12) }
     var contador: Int = 0
 
-    init {
-        nombres.size == 4
-    }
-
-    fun leerRespuestas(respuestasEstudiante: CharArray) {
+    fun leerRespuestas(respuestasEstudiante: CharArray) { //Recibe y crea la matriz con sus espacios
         if (contador < 4) {
             respuestas[contador] = respuestasEstudiante
             contador++
         }
     }
 
-    fun comprobador() { //Comprobar si se guardan en sus respectivos lugares
+    fun toStringg() { //Imprime todos los datos
+            println("________________________________________________________________________________")
         for (i in 0 until contador) {
             calculaNota(respuestas, plantilla, notas)
-            println("${nombres[i]} ${respuestas[i].joinToString(" ")} ${notas[i]}")
+            val estados = estadoNota(notas)
+            println("Estudiante: ${nombres[i]} Respuestas: ${respuestas[i].joinToString(" ")}  Notas: ${notas[i]} ${estados[i]}")
         }
+            val promedio = promedioGrupo()
+            println()
+            println("Promedio del grupo: $promedio")
+            val mejor = mayorNota()
+            println("El estudiante con mayor nota es $mejor.")
+            println("________________________________________________________________________________")
     }
 
     fun calculaNota(respuestas: Array<CharArray>, plantilla: Array<Char>, notas: FloatArray) {
@@ -36,17 +40,48 @@ class Examen(val nombres: Array<String>) {
                         puntos++
                     }
                 }
-                    notas[fila] = (puntos*100/12f)
+                    notas[fila] = (puntos*100/12.0f)
             }
+    }
+
+    fun promedioGrupo(): Float {
+        var suma = 0.0f
+        for (i in notas.indices) {
+            suma += notas[i]
+        }
+        return suma/notas.size
+    }
+
+    fun mayorNota(): String {
+        var mayor = notas[0]
+        var nombre = 0
+        for (i in notas.indices) {
+            if (notas[i] > mayor) {
+                mayor = notas[i]
+                nombre = i
+            }
+        }
+        return nombres[nombre]
+    }
+
+    fun estadoNota(notas: FloatArray): Array<String> {
+        val estados = Array(notas.size) {""}
+        for (i in notas.indices) {
+            estados[i] = when {
+                notas[i] >= 70.0f -> "Aprobó"
+                notas[i] < 70.0f && notas[i] >= 60.0f -> "Aplazó"
+                else -> "Reprobó"
+            }
+        }
+        return estados
     }
 }
 
 fun main() {
-    val Cons = Examen(arrayOf("Marta", "Pedro", "Juan", "María"))
-    Cons.leerRespuestas(charArrayOf('a', 'c', 'b', 'a', 'd', 'b', 'b', 'c', 'a', 'a', 'b', 'd'))
-    Cons.leerRespuestas(charArrayOf('b', 'c', 'b', 'd', 'd', 'b', 'b', 'a', 'b', 'd', 'b', 'd'))
-    Cons.leerRespuestas(charArrayOf('c', 'c', 'b', 'a', 'a', 'b', 'c', 'c', 'a', 'a', 'b', 'c'))
-    Cons.leerRespuestas(charArrayOf('c', 'c', 'b', 'a', 'd', 'b', 'b', 'c', 'a', 'a', 'b', 'c'))
-    Cons.comprobador()
-
+    val Examen = Examen(arrayOf("Marta", "Pedro", "Juan ", "María"))
+    Examen.leerRespuestas(charArrayOf('a', 'c', 'b', 'a', 'd', 'b', 'b', 'c', 'a', 'a', 'b', 'd'))
+    Examen.leerRespuestas(charArrayOf('b', 'c', 'b', 'd', 'd', 'b', 'b', 'a', 'b', 'd', 'b', 'd'))
+    Examen.leerRespuestas(charArrayOf('c', 'c', 'b', 'a', 'a', 'b', 'c', 'c', 'a', 'a', 'b', 'c'))
+    Examen.leerRespuestas(charArrayOf('c', 'c', 'b', 'a', 'd', 'b', 'b', 'c', 'a', 'a', 'b', 'c'))
+    Examen.toStringg()
 }
