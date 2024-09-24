@@ -4,6 +4,7 @@ Para cada pregunta existen 4 opciones de respuesta a elegir: a  b  c  d.
 El estudiante será calificado en una escala de 0 a 100 de acuerdo a sus respuestas.
  */
 
+    import kotlin.math.roundToInt
 class Examen(val nombres: Array<String> = Array(4){""}) {
     val plantilla: Array<Char> = arrayOf('a', 'c', 'b', 'a', 'd', 'b', 'b', 'c', 'a', 'a', 'b', 'd')
     var notas: FloatArray = FloatArray(4)
@@ -17,16 +18,16 @@ class Examen(val nombres: Array<String> = Array(4){""}) {
         }
     }
 
-    fun toStringg() { //Imprime todos los datos
+    fun ToString() { //Imprime todos los datos
             println("________________________________________________________________________________")
         for (i in 0 until contador) {
             calculaNota(respuestas, plantilla, notas)
             val estados = estadoNota(notas)
-            println("Estudiante: ${nombres[i]} Respuestas: ${respuestas[i].joinToString(" ")}  Notas: ${notas[i]} ${estados[i]}")
+            println("Estudiante: ${nombres[i]} Respuestas: ${respuestas[i].joinToString(" ")}  Notas: ${(notas[i] * 100.0).roundToInt() / 100.0} ${estados[i]}")
         }
             val promedio = promedioGrupo()
             println()
-            println("Promedio del grupo: $promedio")
+            println("Promedio del grupo: ${(promedio * 100.0).roundToInt() / 100.0}")
             val mejor = mayorNota()
             println("El estudiante con mayor nota es $mejor.")
             println("________________________________________________________________________________")
@@ -83,5 +84,5 @@ fun main() {
     Examen.leerRespuestas(charArrayOf('b', 'c', 'b', 'd', 'd', 'b', 'b', 'a', 'b', 'd', 'b', 'd'))
     Examen.leerRespuestas(charArrayOf('c', 'c', 'b', 'a', 'a', 'b', 'c', 'c', 'a', 'a', 'b', 'c'))
     Examen.leerRespuestas(charArrayOf('c', 'c', 'b', 'a', 'd', 'b', 'b', 'c', 'a', 'a', 'b', 'c'))
-    Examen.toStringg()
+    Examen.ToString()
 }
